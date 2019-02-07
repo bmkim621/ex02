@@ -37,6 +37,18 @@
 		color: white;
 		background-color: black;
 	}
+	
+	#modDiv{
+		width: 300px;
+		height: 100px;
+		background-color: gray;
+		position: absolute;
+		top: 40%;
+		left: 40%;
+		padding: 10px;
+		z-index: 1000;
+		display: none;	/* 수정 버튼 누를 때 수정 화면 나오돌고 한다. */
+	}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
@@ -156,12 +168,95 @@
 			})
 		})
 		
+		
+		// ====== 수정버튼 : 동적으로 버튼 만들어지까 on 사용해야 함. ======
+		$(document).on("click", ".modify", function(){
+			//rno 가져오기
+			//this: 수정버튼
+			var rno = $(this).parents(".replyLi").attr("data-rno");
+			$("#modDiv").find(".modal-title").text(rno);
+			
+			//댓글 내용 가져오기
+			var text = $(this).parent().prev().text();
+			$("#replyModText").val(text);
+			
+			$("#modDiv").show();
+		})
+		
+		//이미 body안에 태그가 있으므로 굳이 document 사용안해도 됨.
+		//취소 버튼 누르면 수정할 수 있는 창 안보이게한다.
+		$("#btnCancel").click(function(){
+			$("#modDiv").hide();
+		})
+		
+		$("#btnReplyMod").click(function(){
+			//수정하려는 내용 들고오기(그럴려면 rno의 값을 알아야 함!)
+			var rno = $(".modal-title").text();
+			var replytext = $("#replyModText").val();
+			var jsonBody = {replytext: replytext};
+			
+			//ajax로 보냄.
+			$.ajax({
+				url: "replies/" + rno,
+				type: "put",
+				//보낼 데이터 => int rno와 vo(RequestBody있으니까 headers, stringify 필요)
+				headers:{
+					"Content-Type": "application/json",
+					"X-HTTP-Method-Override": "PUT"
+				},
+				data: JSON.stringify(jsonBody),	
+				dataType: "text",
+				success: function(json){
+					console.log(json);
+					
+					if(json == "Success"){
+						alert(rno + "가 수정되었습니다.");
+					}
+					
+					//수정되고 나서 창 안보이게 처리한다.
+					$("#modDiv").hide();
+					//리스트 갱신시킨다.
+					getPageList(1);
+				}
+				
+			})
+		})
+		
+		
+		// ====== 삭제버튼 : 동적으로 버튼 생기니까 on 사용해야 함. ======
+		$(document).on("click", ".delete", function(){
+			//삭제할 때 rno 필요하니까 가져온다.
+			var rno = $(this).parents(".replyLi").attr("data-rno");
+			
+			$.ajax({
+				url: "replies/" + rno,
+				type: "delete",
+				dataType: "text",
+				success: function(json){
+					console.log(json);
+					
+					if(json == "Success"){
+						alert("삭제되었습니다.");
+					}
+					
+					//리스트 갱신시킨다.
+					getPageList(1);
+				}
+			})
+		})
 	})
 </script>
 </head>
 <body>
 	<div id="modDiv">
-	
+		<div class="modal-title">rno</div>
+		<div>
+			<input type="text" id="replyModText">
+		</div>
+		<div>
+			<button id="btnReplyMod">수정</button>
+			<button id="btnCancel">취소</button>
+		</div>
 	</div>
 
 	<h2>Ajax Test Page</h2>
