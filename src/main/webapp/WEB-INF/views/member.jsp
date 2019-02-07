@@ -8,11 +8,49 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <title>Insert title here</title>
+<script>
+
+	//리스트 가져오는 함수 만들기
+	
+	$(function(){
+		$("#btnAdd").click(function(){
+			//추가할 때 필요한 것 : MemberVO
+			//input에 있는 아이디, 이름, 비밀번호, 이메일 값 가져오기
+			var userid = $("#userid").val();
+			var username = $("#username").val();
+			var userpw = $("#userpw").val();
+			var email = $("#email").val();
+			//POST -> body에 실어서 보내야되기 때문에 따로 만들어줌.
+			var jsonBody = {userid: userid, username: username, userpw: userpw, email: email};
+			
+			//컨트롤러에 RequestBody(RestControlle에서만 RequestBody 사용함!) 있는 경우 => headers, JSON.stringify 반드시 사용해야 함.
+			$.ajax({
+				url: "member/",
+				type: "post",
+				headers:{
+					"Content-Type": "application/json",
+					"X-HTTP-Method-Override": "POST"
+				},
+				data: JSON.stringify(jsonBody),
+				dataType: "text",
+				success: function(json){
+					console.log(json);	
+					
+					if(json == "Success"){
+						alert("추가했습니다.");
+						
+						//등록한 후 리스트가 나타나도록 한다.
+					}
+				}
+			})
+		})
+	})
+</script>
 </head>
 <body>
 
 	<div class="container">
-		<h2>Horizontal form</h2>
+		<h3>REGISTER MEMBER</h3>
 		
 		<form class="form-horizontal" action="/action_page.php">
 			<div class="form-group">
@@ -42,10 +80,27 @@
 			
 			<div class="form-group">        
 				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-default">Submit</button>
+					<button type="button" class="btn btn-primary" id="btnAdd">추가</button>
+					<button type="button" class="btn btn-default" id="btnGetList">리스트 가져오기</button>
 				</div>
 			</div>
 		</form>
+		
+		<!-- 테이블 -->
+		<table class="table">
+			<tbody>
+				<tr>
+					<td>아이디</td>
+					<td>이름</td>
+					<td>비밀번호</td>
+					<td>이메일</td>
+					<td>
+						<button type="button" class="btn btn-success" id="btnModify">수정</button>
+						<button type="button" class="btn btn-danger" id="btnDelete">삭제</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 
 </body>

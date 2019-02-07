@@ -49,7 +49,7 @@ public class MemberController {
 	
 	//2. 리스트 가져오기
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public ResponseEntity<List<MemberVO>> list(Model model){
+	public ResponseEntity<List<MemberVO>> list(){
 		ResponseEntity<List<MemberVO>> entity = null;
 		
 		logger.info("===== Member list ===== ");
