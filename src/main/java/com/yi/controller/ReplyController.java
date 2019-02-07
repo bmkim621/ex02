@@ -25,7 +25,7 @@ import com.yi.service.ReplyService;
 @RequestMapping("/replies/*")
 public class ReplyController {
 	//로그로 확인하기
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReplyController.class);
 	
 	@Autowired
 	private ReplyService service;

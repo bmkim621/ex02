@@ -47,7 +47,7 @@
 		left: 40%;
 		padding: 10px;
 		z-index: 1000;
-		display: none;	/* 수정 버튼 누를 때 수정 화면 나오돌고 한다. */
+		display: none;	/* 수정 버튼 누를 때 수정 화면 나오도록 한다. */
 	}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
