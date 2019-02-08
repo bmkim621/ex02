@@ -7,10 +7,32 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
 <title>Insert title here</title>
 <script>
 
-	//리스트 가져오는 함수 만들기
+	function getListMember(){
+		$.ajax({
+			url: "${pageContext.request.contextPath}/member/list",
+			type: "get",
+			dataType: "json",
+			success: function(json){
+				console.log(json);
+				
+//				$("#listContent").remove();
+				
+				var source = $("#template1").html();
+				var f = Handlebars.compile(source);
+				var result = f(json.list);
+				console.log(result);
+
+				$("#tablebody").append(result);
+				
+				
+			}
+			
+		})
+	}
 	
 	$(function(){
 		$("#btnAdd").click(function(){
@@ -34,12 +56,20 @@
 				data: JSON.stringify(jsonBody),
 				dataType: "text",
 				success: function(json){
-					console.log(json);	
+//					console.log(json);	
 					
 					if(json == "Success"){
-						alert("추가했습니다.");
 						
+						alert("추가했습니다.");
+				
 						//등록한 후 리스트가 나타나도록 한다.
+						getListMember();
+						
+						//입력창 비우기
+						$("#userid").val("");
+						$("#username").val("");
+						$("#userpw").val("");
+						$("#email").val("");
 					}
 				}
 			})
@@ -86,21 +116,23 @@
 			</div>
 		</form>
 		
-		<!-- 테이블 -->
-		<table class="table">
-			<tbody>
-				<tr>
-					<td>아이디</td>
-					<td>이름</td>
-					<td>비밀번호</td>
-					<td>이메일</td>
+		<table id="t1">
+			<tbody id="tablebody"></tbody>
+		</table>
+		
+		<!-- 리스트 가져오기 -->
+		<script id="template1" type="text/x-handlebars-template">
+				<tr class="listContent">
+					<td>{{userid}}</td>
+					<td>{{username}}</td>
+					<td>{{userpw}}</td>
+					<td>{{email}}</td>
 					<td>
 						<button type="button" class="btn btn-success" id="btnModify">수정</button>
 						<button type="button" class="btn btn-danger" id="btnDelete">삭제</button>
 					</td>
 				</tr>
-			</tbody>
-		</table>
+		</script>
 	</div>
 
 </body>

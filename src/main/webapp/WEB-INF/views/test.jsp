@@ -51,6 +51,26 @@
 	}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- handlebars -> 제이쿼리 먼저 있어야 함. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+
+<script id="template1" type="text/x-handlebars-template">
+	{{#each.}}
+	<li data-rno="{{rno}}" class="replyLi">
+		<div class="item">
+			<span class="rno">{{rno}}</span> : <span class="writer">{{replyer}}</span><br>
+			<span>{{replytext}}</span>
+			<div class="btnWrap">
+				<button class="modify">수정</button>
+				<button class="delete">삭제</button>
+			</div>
+		</div>
+	</li>
+	{{/each}}
+</script>
+
+
+
 <script>
 	//처음 bno는 받아올 수 없으니까 전역변수로 사용
 	var bno = 34804;
@@ -66,21 +86,17 @@
 			success: function(json){
 				console.log(json);
 				
-				/* <li data-rno="1" class="replyLi">
-					<div class="item">
-						<span class="rno">1</span> : <span class="writer">user</span><br>
-						<span>댓글 내용</span>
-						<div class="btnWrap">
-							<button class="modify">수정</button>
-							<button class="delete">삭제</button>
-						</div>
-					</div>
-				</li> */
 				
 				//새로고침 될 때 안에 있는 내용 날린다. => 댓글 작성 성공하면 다시 getPageList 호출하기 때문에
 				$("#replies").empty();
 				
-				$(json.list).each(function(i, obj){
+				var source = $("#template1").html();
+				var f = Handlebars.compile(source);
+				var result = f(json.list);
+				
+				$("#replies").append(result);
+				
+				/* $(json.list).each(function(i, obj){
 					//비어있는 태그 만들어서 속성 추가하기
 					var liTag = $("<li>").attr("data-rno", obj.rno).attr("class", "replyLi");
 					//attr 말고도 class 추가니까 addClass도 가능.
@@ -100,7 +116,9 @@
 					
 					$("#replies").append(liTag);
 						
-				})
+				}) */
+				
+				
 				
 				//pagination
 				/* <li class="active"><a href="#">1</a></li> */
@@ -243,6 +261,18 @@
 					getPageList(1);
 				}
 			})
+		})
+		
+		
+		// ====== 페이지 이동 : 동적으로 버튼 생기니까 on 사용해야 함. ======
+		$(document).on("click", ".pagination a", function(e){
+			 e.preventDefault();	//클릭 차단
+			 
+			 //내가 몇 번째 클릭하는지 어떻게 알지? => 일단 페이지 번호를 가지고 온다. <a>안에 페이지 번호 있으니까 this
+			 var num = $(this).text();
+			 getPageList(num);
+			 
+			
 		})
 	})
 </script>

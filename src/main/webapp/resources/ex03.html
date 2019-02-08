@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- handlebars -> 제이쿼리 먼저 있어야 함. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+</head>
+<body>
+	<ul id="replies">
+	</ul>
+	
+	<!-- each: 반복 한다는 것을 명시해야 함 -->
+	<!-- 하나의 헬퍼에는 하나의 값만 사용 가능 -->
+	<script id="template1" type="text/x-handlebars-template">
+		{{#each.}}
+		<li class="repliLi">
+			<div>{{rno}}</div>
+			<div>{{replytext}}</div>
+			<div>{{tempdate replydate}} {{tempweek replydate}} {{temptime replydate}}</div>
+		</li>
+		{{/each}}
+	</script>
+	
+	<script>
+		<!-- 날짜 -->
+		Handlebars.registerHelper("tempdate", function(value){
+			var date = new Date(value);
+			//연
+			var year = date.getFullYear();
+			//월
+			var month = date.getMonth() + 1;
+			//일
+			var day = date.getDate();
+			
+			return year + "/" + month + "/" + day;
+		});	//내가 지정한 헬퍼 이름, function(내가 지정한 매개변수명)
+	
+		<!-- 요일 -->
+		Handlebars.registerHelper("tempweek", function(value){
+			//일: 0 ~ 토: 6
+			var sWeek = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
+			var date = new Date(value);
+			var week = date.getDay();
+			
+			return sWeek[week];
+		})
+		
+		<!-- 시간 -->
+		Handlebars.registerHelper("temptime", function(value){
+			var date = new Date(value);
+			var hour = date.getHours();
+			var minutes = date.getMinutes();
+			var second = date.getSeconds();
+			
+			return hour + "시 " + minutes + "분 " + second + "초"; 
+		})
+		
+		
+		var source = $("#template1").html();
+		var f = Handlebars.compile(source);
+		//{}: 객체, []: 배열
+		var data = [
+				{rno: 1, replytext: "1번 댓글", replydate: new Date()},
+				{rno: 2, replytext: "2번 댓글", replydate: new Date()},
+				{rno: 3, replytext: "3번 댓글", replydate: new Date()},
+				{rno: 4, replytext: "4번 댓글", replydate: new Date()},
+				{rno: 5, replytext: "5번 댓글", replydate: new Date()}
+		];
+		var result = f(data);
+		
+		$("#replies").html(result);
+	</script>
+</body>
+</html>

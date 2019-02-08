@@ -100,7 +100,7 @@ public class ReplyController {
 	public ResponseEntity<List<ReplyVO>> list(@PathVariable("bno") int bno){
 		
 		ResponseEntity<List<ReplyVO>> entity = null;
-		
+
 		try {
 			//리스트 가져오기
 			List<ReplyVO> list = service.list(bno);
@@ -121,7 +121,7 @@ public class ReplyController {
 	public ResponseEntity<String> update(@PathVariable("rno") int rno, @RequestBody ReplyVO vo){
 		
 		ResponseEntity<String> entity = null;
-		
+			
 		try {
 			vo.setRno(rno);
 			service.update(vo);

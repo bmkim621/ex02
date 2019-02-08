@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- handlebars -> 제이쿼리 먼저 있어야 함. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+</head>
+<body>
+	<div id="t1"></div>
+	
+	<script id="template1" type="text/x-handlebars-template">
+		<span>{{name}}</span>
+		<div>
+			<span>{{userid}}</span>
+			<span>{{addr}}</span>
+		</div>
+	</script>
+	
+	<script>
+		//0. 소스 가지고 오기(스크립트가 가지고 있음.)
+		var source = $("#template1").html();
+		//1. 템플릿을 가지고와서 컴파일한다.
+		var template = Handlebars.compile(source);
+		//2. json 데이터
+		var data = {name: "홍길동", userid: "hong", addr: "조선"};
+		//3. 데이터 바인딩
+		var result = template(data);
+		//4. 결과 화면에 보이게 하기
+		$("#t1").html(result);
+	</script>
+	
+	<hr>
+	
+	<div id="t2"></div>
+	
+	<script id="template2" type="text/x-handlebars-template">
+		<h1>{{title}}</h1>
+		<p>{{content}}</p>
+		<p>{{date}}</p>
+	</script>
+	
+	<script>
+		var source = $("#template2").html();
+		var f = Handlebars.compile(source);
+//		var data = {title: "오늘의 날씨는?", content: "미세 먼지는 좋으나 날씨는 어제보다 춥습니다.", date: "2019-02-08"};
+		var data = {title: "오늘의 날씨는?", content: "미세 먼지는 좋으나 날씨는 어제보다 춥습니다.", date: new Date()};
+		var result = f(data);
+		$("#t2").html(result);
+	</script>
+	
+
+</body>
+</html>
