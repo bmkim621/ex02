@@ -1,7 +1,7 @@
 -- book_ex
 DROP SCHEMA IF EXISTS book_ex;
 
--- coffee_management
+-- book_ex
 CREATE SCHEMA book_ex;
 
 use book_ex;
